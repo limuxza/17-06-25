@@ -348,7 +348,7 @@ local Main = Linux.Instance("Frame", {
     Parent = LinuxUI,
     BackgroundColor3 = Color3.fromRGB(30, 30, 30),
     BorderColor3 = Color3.fromRGB(39, 39, 42),
-    BorderSizePixel = 1,
+    BorderSizePixel = 0,
     Size = uiSize,
     Position = UDim2.new(0.5, -uiSize.X.Offset / 2, 0.5, -uiSize.Y.Offset / 2),
     Active = true,
@@ -358,14 +358,69 @@ local Main = Linux.Instance("Frame", {
 
 Linux.Instance("UICorner", {
     Parent = Main,
-    CornerRadius = UDim.new(0, 4)
+    CornerRadius = UDim.new(0, 8)
 })
 
-Linux.Instance("UIStroke", {
+-- Rainbow Border Animation
+local RainbowStroke = Linux.Instance("UIStroke", {
     Parent = Main,
-    Color = Color3.fromRGB(20, 20, 21),
-    Thickness = 1
+    Color = Color3.fromRGB(255, 0, 0),
+    Thickness = 3
 })
+
+-- Create rainbow animation
+local rainbowConnection
+local hue = 0
+rainbowConnection = RunService.Heartbeat:Connect(function()
+    if not Main or not Main.Parent then
+        if rainbowConnection then
+            rainbowConnection:Disconnect()
+        end
+        return
+    end
+    
+    hue = hue + 0.01
+    if hue >= 1 then
+        hue = 0
+    end
+    
+    local color = Color3.fromHSV(hue, 1, 1)
+    RainbowStroke.Color = color
+end)
+
+-- Outer glow effect
+local OuterGlow = Linux.Instance("Frame", {
+    Parent = LinuxUI,
+    BackgroundTransparency = 1,
+    Size = UDim2.new(0, uiSize.X.Offset + 20, 0, uiSize.Y.Offset + 20),
+    Position = UDim2.new(0.5, -(uiSize.X.Offset + 20) / 2, 0.5, -(uiSize.Y.Offset + 20) / 2),
+    ZIndex = 0
+})
+
+Linux.Instance("UICorner", {
+    Parent = OuterGlow,
+    CornerRadius = UDim.new(0, 12)
+})
+
+local OuterGlowStroke = Linux.Instance("UIStroke", {
+    Parent = OuterGlow,
+    Color = Color3.fromRGB(255, 0, 0),
+    Thickness = 2,
+    Transparency = 0.3
+})
+
+-- Sync outer glow with main border
+local outerGlowConnection
+outerGlowConnection = RunService.Heartbeat:Connect(function()
+    if not OuterGlow or not OuterGlow.Parent then
+        if outerGlowConnection then
+            outerGlowConnection:Disconnect()
+        end
+        return
+    end
+    
+    OuterGlowStroke.Color = RainbowStroke.Color
+end)
 
 local TopBar = Linux.Instance("Frame", {
     Parent = Main,
@@ -378,7 +433,7 @@ local TopBar = Linux.Instance("Frame", {
 
 Linux.Instance("UICorner", {
     Parent = TopBar,
-    CornerRadius = UDim.new(0, 4)
+    CornerRadius = UDim.new(0, 8)
 })
 
 local TitleLabel = Linux.Instance("TextLabel", {
@@ -752,7 +807,7 @@ function LinuxLib.Tab(config)
         
         local BtnFrame = Linux.Instance("Frame", {
             Parent = Container,
-            BackgroundColor3 = Color3.fromRGB(21, 21, 21),
+            BackgroundColor3 = Color3.fromRGB(25, 25, 25),
             BorderColor3 = Color3.fromRGB(39, 39, 42),
             BorderSizePixel = 0,
             Size = UDim2.new(1, -8, 0, 36),
@@ -795,7 +850,7 @@ function LinuxLib.Tab(config)
                 buttonClicked = true
                 TweenService:Create(BtnFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(15, 15, 15)}):Play()
                 task.wait(0.3)
-                TweenService:Create(BtnFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(21, 21, 21)}):Play()
+                TweenService:Create(BtnFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(25, 25, 25)}):Play()
                 buttonClicked = false
             end
             spawn(function() Linux:SafeCallback(config.Callback) end)
@@ -825,7 +880,7 @@ function LinuxLib.Tab(config)
         
         local Toggle = Linux.Instance("Frame", {
             Parent = Container,
-            BackgroundColor3 = Color3.fromRGB(21, 21, 21),
+            BackgroundColor3 = Color3.fromRGB(25, 25, 25),
             BorderColor3 = Color3.fromRGB(39, 39, 42),
             BorderSizePixel = 0,
             Size = UDim2.new(1, -8, 0, 36),
@@ -956,7 +1011,7 @@ function LinuxLib.Tab(config)
         
         local Dropdown = Linux.Instance("Frame", {
             Parent = Container,
-            BackgroundColor3 = Color3.fromRGB(21, 21, 21),
+            BackgroundColor3 = Color3.fromRGB(25, 25, 25),
             BorderColor3 = Color3.fromRGB(39, 39, 42),
             BorderSizePixel = 0,
             Size = UDim2.new(1, -8, 0, 36),
@@ -1045,7 +1100,7 @@ function LinuxLib.Tab(config)
         
         local DropFrame = Linux.Instance("Frame", {
             Parent = Container,
-            BackgroundColor3 = Color3.fromRGB(21, 21, 21),
+            BackgroundColor3 = Color3.fromRGB(25, 25, 25),
             BorderColor3 = Color3.fromRGB(39, 39, 42),
             BorderSizePixel = 0,
             Size = UDim2.new(1, -8, 0, 0),
@@ -1133,7 +1188,7 @@ function LinuxLib.Tab(config)
                     
                     local OptBtn = Linux.Instance("TextButton", {
                         Parent = OptionsHolder,
-                        BackgroundColor3 = Color3.fromRGB(21, 21, 21),
+                        BackgroundColor3 = Color3.fromRGB(25, 25, 25),
                         BorderColor3 = Color3.fromRGB(39, 39, 42),
                         BorderSizePixel = 1,
                         Size = UDim2.new(1, -4, 0, 28),
@@ -1295,7 +1350,7 @@ function LinuxLib.Tab(config)
         
         local Slider = Linux.Instance("Frame", {
             Parent = Container,
-            BackgroundColor3 = Color3.fromRGB(21, 21, 21),
+            BackgroundColor3 = Color3.fromRGB(25, 25, 25),
             BorderSizePixel = 0,
             Size = UDim2.new(1, -8, 0, 42),
             ZIndex = 1,
@@ -1541,7 +1596,7 @@ function LinuxLib.Tab(config)
         
         local Input = Linux.Instance("Frame", {
             Parent = Container,
-            BackgroundColor3 = Color3.fromRGB(21, 21, 21),
+            BackgroundColor3 = Color3.fromRGB(25, 25, 25),
             BorderColor3 = Color3.fromRGB(39, 39, 42),
             BorderSizePixel = 0,
             Size = UDim2.new(1, -8, 0, 36),
@@ -1759,7 +1814,7 @@ function LinuxLib.Tab(config)
         
         local LabelFrame = Linux.Instance("Frame", {
             Parent = Container,
-            BackgroundColor3 = Color3.fromRGB(21, 21, 21),
+            BackgroundColor3 = Color3.fromRGB(25, 25, 25),
             BorderColor3 = Color3.fromRGB(39, 39, 42),
             BorderSizePixel = 0,
             Size = UDim2.new(1, -8, 0, 36),
@@ -1897,7 +1952,7 @@ function LinuxLib.Tab(config)
         
         local ParagraphFrame = Linux.Instance("Frame", {
             Parent = Container,
-            BackgroundColor3 = Color3.fromRGB(21, 21, 21),
+            BackgroundColor3 = Color3.fromRGB(25, 25, 25),
             BorderColor3 = Color3.fromRGB(39, 39, 42),
             BorderSizePixel = 0,
             Size = UDim2.new(1, -8, 0, 0),
@@ -2053,7 +2108,7 @@ function LinuxLib.Tab(config)
         
         local KeybindFrame = Linux.Instance("Frame", {
             Parent = Container,
-            BackgroundColor3 = Color3.fromRGB(21, 21, 21),
+            BackgroundColor3 = Color3.fromRGB(25, 25, 25),
             BorderSizePixel = 0,
             Size = UDim2.new(1, -8, 0, 36),
             ZIndex = 1,
@@ -2182,7 +2237,7 @@ function LinuxLib.Tab(config)
         
         local ColorpickerFrame = Linux.Instance("Frame", {
             Parent = Container,
-            BackgroundColor3 = Color3.fromRGB(21, 21, 21),
+            BackgroundColor3 = Color3.fromRGB(25, 25, 25),
             BorderColor3 = Color3.fromRGB(39, 39, 42),
             BorderSizePixel = 0,
             Size = UDim2.new(1, -8, 0, 36),
